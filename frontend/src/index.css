@@ -1,0 +1,6 @@
+/* @import 'preline'; */
+/* @import 'tailgrids'; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
