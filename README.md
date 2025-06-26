@@ -2,7 +2,7 @@
 
 LearnQE is a React app that helps testers explore and learn software testing techniques based on ISO/IEC/IEEE 29119 standards.
 
-## Live Demo
+## URL
 
 [https://kanzur.github.io/LearnQE/](https://kanzur.github.io/LearnQE/)
 
