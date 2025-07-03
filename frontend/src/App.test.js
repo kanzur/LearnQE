@@ -9,7 +9,8 @@ import App from './App';
 
 test('renders LearnQE heading', () => {
   render(<App />);
-  const heading = screen.getByText(/LearnQE/i);
-  expect(heading).toBeInTheDocument();
+  const headings = screen.getAllByText(/LearnQE/i);
+  expect(headings.length).toBeGreaterThanOrEqual(1);
 });
+
 
