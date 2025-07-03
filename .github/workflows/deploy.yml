@@ -22,20 +22,37 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Run tests and generate report
         run: |
-          npm install --save-dev jest jest-junit
-          npm test -- --ci --reporters=default --reporters=jest-junit
+          npm install
+          npm install --save-dev jest jest-junit jest-html-reporter
+
+      - name: Create jest-html-reporter config
+        run: |
+          echo '{
+            "pageTitle": "Test Report",
+            "outputPath": "test-report/report.html"
+          }' > jesthtmlreporter.config.json
+
+      - name: Run tests and generate reports
+        run: |
+          npm test -- --ci --reporters=default --reporters=jest-junit --reporters=jest-html-reporter
         continue-on-error: true
 
-      - name: Upload test report
+      - name: Convert HTML report to PDF
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wkhtmltopdf
+          wkhtmltopdf ./test-report/report.html ./test-report/report.pdf
+
+      - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-report
-          path: ./frontend/junit.xml
+          name: test-reports
+          path: |
+            ./frontend/junit.xml
+            ./frontend/test-report/report.html
+            ./frontend/test-report/report.pdf
 
       - name: Check test results
         id: test-check
@@ -50,7 +67,7 @@ jobs:
           fi
 
       - name: Send email on test failure
-        if: failure()  # Runs only if previous step failed
+        if: failure()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -63,10 +80,10 @@ jobs:
           body: |
             Hello,
 
-            The deployment process was stopped because one or more tests failed.
-            Please review the test report in the GitHub Actions run for more details.
+            The deployment was stopped because one or more tests failed.
+            Please review the attached test report (HTML/PDF) in the GitHub Actions run.
 
-            Repository: ${{ github.repository }}
+            Repo: ${{ github.repository }}
             Commit: ${{ github.sha }}
             Workflow: ${{ github.workflow }}
 
