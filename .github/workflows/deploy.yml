@@ -102,3 +102,39 @@ jobs:
           publish_dir: ./frontend/build
           force_orphan: true
           allow_empty_commit: true
+
+      - name: Deploy to GitHub Pages
+        if: steps.test-check.outputs.deploy == 'true'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./frontend/build
+          force_orphan: true
+          allow_empty_commit: true
+
+      - name: Send email on successful deployment
+        if: steps.test-check.outputs.deploy == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "✅ Deployment Successful: React App to GitHub Pages"
+          to: kanzur95@gmail.com
+          from: "GitHub CI <${{ secrets.EMAIL_USERNAME }}>"
+          body: |
+            Hello,
+
+            The deployment of the LearnQE web application to GitHub Pages was completed successfully.
+
+            ✅ All tests passed  
+            ✅ Build succeeded  
+            🚀 Site deployed at: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+
+            Repository: ${{ github.repository }}
+            Commit: ${{ github.sha }}
+            Workflow: ${{ github.workflow }}
+
+            Regards,  
+            GitHub Actions
