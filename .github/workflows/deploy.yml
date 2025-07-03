@@ -8,39 +8,77 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js environment
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./frontend
 
       - name: Run tests and generate report
         run: |
           npm install --save-dev jest jest-junit
-          npm test -- --ci --reporters=default --reporters=jest-junit || echo "Tests failed"
-        working-directory: ./frontend
+          npm test -- --ci --reporters=default --reporters=jest-junit
         continue-on-error: true
 
       - name: Upload test report
-        if: always()  # Always upload, even if tests fail
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: ./frontend/junit.xml
 
+      - name: Check test results
+        id: test-check
+        run: |
+          if grep -q "<failure" ./frontend/junit.xml; then
+            echo "Tests failed."
+            echo "deploy=false" >> $GITHUB_OUTPUT
+            exit 1  # ❌ Stop the pipeline
+          else
+            echo "Tests passed."
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send email on test failure
+        if: failure()  # Runs only if previous step failed
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "🚨 Deployment Failed Due to Test Failures"
+          to: kanzur95@gmail.com
+          from: "GitHub CI <${{ secrets.EMAIL_USERNAME }}>"
+          body: |
+            Hello,
+
+            The deployment process was stopped because one or more tests failed.
+            Please review the test report in the GitHub Actions run for more details.
+
+            Repository: ${{ github.repository }}
+            Commit: ${{ github.sha }}
+            Workflow: ${{ github.workflow }}
+
+            Regards,
+            GitHub Actions
+
       - name: Build the React app
+        if: steps.test-check.outputs.deploy == 'true'
         run: npm run build
-        working-directory: ./frontend
 
       - name: Deploy to GitHub Pages
+        if: steps.test-check.outputs.deploy == 'true'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
