@@ -29,7 +29,7 @@ const UnderDevelopmentModal = ({ onClose, title }) => (
 );
 
 const HomePage = () => {
-  const [mainCard, setMainCard] = useState(''); // 'testing' or 'design'
+  const [mainCard, setMainCard] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedTechnique, setSelectedTechnique] = useState('');
   const [showQuiz, setShowQuiz] = useState(false);
