@@ -106,15 +106,15 @@ const HomePage = () => {
               <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-2xl mb-4 shadow-md">
                 ✏️
               </div>
-{/*               <h3 className="text-xl font-bold text-gray-800 mb-2">Test Design Techniques</h3> */}
-{/*               <p className="text-gray-600 mb-4 flex-grow">Coming soon: Learn about test design techniques and best practices for effective test cases.</p>
-              <div className="flex justify-between items-center">
+             <h3 className="text-xl font-bold text-gray-800 mb-2">Test Design Techniques</h3> 
+               <p className="text-gray-600 mb-4 flex-grow">Coming soon: Learn about test design techniques and best practices for effective test cases.</p>
+                <div className="flex justify-between items-center">
                 <span className="text-sm font-medium text-green-600">Coming soon</span>
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                   <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
-                </div> */}
+                </div>
               </div>
             </div>
           </div>
