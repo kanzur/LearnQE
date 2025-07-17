@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/LearnQE/static/css/main.b6104afa.css",
+    "main.js": "/LearnQE/static/js/main.4a10f84c.js",
+    "static/js/453.670e15c7.chunk.js": "/LearnQE/static/js/453.670e15c7.chunk.js",
+    "index.html": "/LearnQE/index.html",
+    "main.b6104afa.css.map": "/LearnQE/static/css/main.b6104afa.css.map",
+    "main.4a10f84c.js.map": "/LearnQE/static/js/main.4a10f84c.js.map",
+    "453.670e15c7.chunk.js.map": "/LearnQE/static/js/453.670e15c7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b6104afa.css",
+    "static/js/main.4a10f84c.js"
+  ]
+}
